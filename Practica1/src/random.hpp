@@ -12,6 +12,10 @@
 
 #include <random>
 
+static thread_local std::random_device rd;                                   // obtain a random number from hardware
+static thread_local std::mt19937 gen(rd());                                  // seed the generator
+static thread_local std::uniform_real_distribution<float> distr(0.0f, 1.0f); // define the range
+
 // Devuelve un número real entre 0 y 1
 float random_float();
 

@@ -8,7 +8,10 @@
  * Coms: Algoritmia para Problemas Difíciles, 2020-2021
  **********************************************************************************/
 
+#pragma once
+
 #include "producto.hpp"
+#include "random.hpp"
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -18,30 +21,33 @@
 
 struct Tabla_Hash {
   private:
-    int tamanyo = 251;
+    // Usar como tamanyo un numero Mersenne,
+    // dicho numero es un primo una unidad
+    // menor a una  potencia de
+    // 2. 131071 = 2^17 - 1
+    int tamanyo = 131071;
     std::vector<int> T;
-
-    static std::vector<std::vector<Producto>> tabla_hash;
-
-    //HashMap<Integer, String> ListaNiveles = new HashMap<Integer, String>();
+    std::vector<std::vector<Producto>> tabla_hash;
+    bool success;
 
   public:
     Tabla_Hash() {
         T = std::vector<int>(255);
 
-        for (int n = 0; n <= 255; n++)
-            T.push_back(n);
+        for (int n = 1; n <= 255; n++)
+            T[n - 1] = n;
 
-        //java.util.Collections.shuffle(T);
+        std::shuffle(T.begin(), T.end(), gen);
+
         tabla_hash = std::vector<std::vector<Producto>>(tamanyo);
         for (int i = 0; i < tamanyo; i++)
             tabla_hash.push_back(std::vector<Producto>());
     }
 
-    void insertar(Producto _producto) {
+    void insertar(Producto producto) {
 
-        int posicion = funcion_dispersion(_producto.nombre);
-        tabla_hash[posicion].push_back(_producto);
+        int posicion = funcion_dispersion(producto.nombre);
+        tabla_hash[posicion].push_back(producto);
     }
 
     Producto buscar(std::string nombre, bool &success) {
@@ -50,7 +56,7 @@ struct Tabla_Hash {
         Producto aux;
         success = true;
 
-        for (int n = 0; n < tabla_hash[posicion].size(); n++) {
+        for (long unsigned int n = 0; n < tabla_hash[posicion].size(); n++) {
             aux = tabla_hash[posicion][n];
 
             if (aux.nombre == nombre)
@@ -63,7 +69,7 @@ struct Tabla_Hash {
     int funcion_dispersion(std::string nombre) {
 
         int h = 0;
-        for (int n = 0; n < nombre.length(); n++) {
+        for (long unsigned int n = 0; n < nombre.length(); n++) {
 
             h = T[(h ^ nombre[n])];
         }

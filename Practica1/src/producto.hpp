@@ -8,15 +8,16 @@
  * Coms: Algoritmia para Problemas Difíciles, 2020-2021
  **********************************************************************************/
 
+#pragma once
+
 #include <iostream>
 
 struct Producto {
 
   public:
     std::string nombre;
-    int cantidad;
-    float precio;
+    std::string atributos;
 
-    Producto(std::string _nombre, int _cantidad, float _precio) : nombre(_nombre), cantidad(_cantidad), precio(_precio){};
+    Producto(std::string _nombre, std::string _atributos) : nombre(_nombre), atributos(_atributos){};
     Producto(){};
 };

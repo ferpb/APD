@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -71,7 +72,7 @@ float get_valor_arg(int argc, char **argv, int i, float default_value) {
     }
     try {
         value = std::stof(argv[i + 1]);
-    } catch (std::invalid_argument e) {
+    } catch (std::invalid_argument const &e) {
         std::cout << "El valor de la opción debe ser un número: " << argv[i + 1];
         exit(1);
     }
