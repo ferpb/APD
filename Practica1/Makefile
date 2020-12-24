@@ -15,8 +15,8 @@ SRC=src
 all: min_cut $(FILE)
 
 ##linkar
-min_cut: min_cut.o
-	$(CC) $(CPPFLAGS) $(LDFLAGS) min_cut.o -o min_cut 
+min_cut: min_cut.o random.o
+	$(CC) $(CPPFLAGS) $(LDFLAGS) random.o min_cut.o -o min_cut 
 
 $(FILE): $(FILE).o random.o
 	$(CC) $(CPPFLAGS) $(LDFLAGS) random.o $(SRC)/$(FILE).cpp -o $(FILE)
@@ -28,7 +28,7 @@ $(FILE).o: $(SRC)/$(FILE).cpp $(SRC)/random.hpp
 random.o: $(SRC)/random.cpp $(SRC)/random.hpp
 	$(CC) $(CPPFLAGS) $(SRC)/random.cpp -c
 
-min_cut.o: $(SRC)/min_cut.cpp $(SRC)/tabla_hash.hpp
+min_cut.o: $(SRC)/min_cut.cpp $(SRC)/tabla_hash.hpp $(SRC)/grafo.hpp
 	$(CC) $(CPPFLAGS) $(SRC)/min_cut.cpp -c
 
 ##borrar
