@@ -8,7 +8,7 @@
 #*****************************************************************
 
 CC=g++
-CPPFLAGS=-std=c++11 -Wall -O0
+CPPFLAGS=-std=c++11 -Wall -O3
 FILE=generar_datos
 SRC=src
 

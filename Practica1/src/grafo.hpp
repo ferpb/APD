@@ -24,6 +24,10 @@ struct Arista {
     Arista(){};
 
     Arista(short int _src, short int _dest) : src(_src), dest(_dest) {}
+
+    bool operator==(const Arista &a) {
+        return this->dest == a.dest && this->src == a.src;
+    };
 };
 
 inline std::ostream &operator<<(std::ostream &out, const Arista &a) {
@@ -48,7 +52,7 @@ struct Grafo {
         : aristas(_aristas), conjuntos(_conjuntos), matriz_adj(_matriz_adj),
           num_vertices(_num_vertices), num_aristas(_num_aristas){};
 
-    void contraer_arista(const Arista arista, int position) {
+    void contraer_arista(const Arista arista) {
 
         conjuntos[arista.src] = conjuntos[arista.src] + "-" + conjuntos[arista.dest];
         conjuntos[arista.dest] = "";
@@ -67,22 +71,25 @@ struct Grafo {
             }
         }
 
-        eliminar_arista(arista, position);
+        eliminar_arista(arista);
     }
 
-    void eliminar_arista(const Arista arista, int position) {
+    void eliminar_arista(const Arista arista) {
 
-        aristas.erase(aristas.begin() + position);
+        aristas.erase(std::remove(aristas.begin(), aristas.end(), arista),
+                      aristas.end());
+
+        aristas.erase(std::remove(aristas.begin(), aristas.end(), Arista(arista.dest, arista.src)),
+                      aristas.end());
         for (Arista &a : aristas) {
 
             if (a.src == arista.dest)
                 a.src = arista.src;
-
-            if (a.dest == arista.dest)
+            else if (a.dest == arista.dest)
                 a.dest = arista.src;
         }
-
-        num_aristas--;
+        aristas.erase(std::unique(aristas.begin(), aristas.end()), aristas.end());
+        num_aristas = aristas.size();
     }
 
     void ver_conjuntos() {
@@ -94,5 +101,22 @@ struct Grafo {
                 count++;
             }
         }
+    }
+
+    void ver_aristas() {
+
+        for (const Arista &a : aristas)
+            std::cout << a << std::endl;
+    };
+
+    void i() {
+        int posicion;
+        Arista arista(2, 3);
+        for (long unsigned int i = 0; i < aristas.size(); i++) {
+
+            if (aristas[i].dest == arista.src && aristas[i].src == arista.dest)
+                posicion = i;
+        }
+        aristas.erase(aristas.begin() + posicion);
     }
 };

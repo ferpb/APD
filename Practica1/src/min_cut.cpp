@@ -13,6 +13,7 @@
 #include "tabla_hash.hpp"
 #include <cmath>
 #include <cstdlib>
+#include <ctime>
 #include <exception>
 #include <fstream>
 #include <iostream>
@@ -40,7 +41,7 @@ Tabla_Hash leer_productos(std::string fichero) {
     return T;
 };
 
-void show_matrix(const std::vector<std::vector<short int>> &matriz) {
+void mostrar_matrix(const std::vector<std::vector<short int>> &matriz) {
 
     int n = matriz.size();
 
@@ -74,7 +75,6 @@ std::vector<std::vector<short int>> lee_matriz(std::string fichero) {
             matriz[i][m] = aux;
         }
     }
-    //show_matrix(matriz);
 
     return matriz;
 }
@@ -150,7 +150,21 @@ std::string get_valor_arg(int argc, char **argv, int i, std::string default_valu
     return value;
 }
 
-void read_args(int argc, char **argv, std::string &path_matriz, std::string &path_productos) {
+int get_valor_arg(int argc, char **argv, int i, int default_value) {
+
+    int value = default_value;
+    if (i + 1 >= argc || argv[i + 1][0] == '-') {
+        throw "Falta el valor de la opción r";
+    }
+    if (!(std::string(argv[i + 1]) == "r")) {
+
+        value = std::stoi(argv[i + 1]);
+    } else
+        throw "La opcion r debe ser un entero";
+    return value;
+}
+
+void read_args(int argc, char **argv, std::string &path_matriz, std::string &path_productos, int &r) {
 
     for (int i = 0; i < argc; i++) {
         std::string arg = argv[i];
@@ -159,6 +173,9 @@ void read_args(int argc, char **argv, std::string &path_matriz, std::string &pat
             i++;
         } else if (arg[0] == '-' && arg == "-matriz") {
             path_matriz = get_valor_arg(argc, argv, i, "");
+            i++;
+        } else if (arg[0] == '-' && arg == "-r") {
+            r = get_valor_arg(argc, argv, i, 2);
             i++;
         }
     }
@@ -171,12 +188,15 @@ void Karger(Grafo &grafo, int r) {
     Arista ran_arista;
 
     while (num_vertices > r) {
-        ran = random_int(0.0f, (float)grafo.num_aristas);
+
+        ran = random_int(0, grafo.num_aristas - 1);
         ran_arista = grafo.aristas[ran];
-        grafo.contraer_arista(ran_arista, ran);
+        //std::cout << ran_arista << std::endl;
+        grafo.contraer_arista(ran_arista);
         num_vertices--;
     }
     std::cout << "Resultado:" << std::endl;
+    mostrar_matrix(grafo.matriz_adj);
     grafo.ver_conjuntos();
 }
 
@@ -185,16 +205,19 @@ int main(int argc, char **argv) {
     std::string path_productos, path_matriz;
     Tabla_Hash tabla_hash;
     Grafo grafo;
-
-    read_args(argc, argv, path_matriz, path_productos);
+    int r;
+    unsigned timepo_antes, tiempo_despues;
 
     try {
+        read_args(argc, argv, path_matriz, path_productos, r);
         tabla_hash = leer_productos(path_productos);
         std::cout << "Creando grafo..." << std::endl;
         grafo = crear_grafo(path_matriz);
     } catch (std::string s) {
         std::cout << s << std::endl;
     }
-    std::cout << std::endl;
-    Karger(grafo, 2);
+    timepo_antes = clock();
+    Karger(grafo, r);
+    tiempo_despues = clock();
+    std::cout << "Tiempo: " << (float(timepo_antes - tiempo_despues) / CLOCKS_PER_SEC) << std::endl;
 }
