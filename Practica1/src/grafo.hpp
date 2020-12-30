@@ -43,8 +43,7 @@ struct Grafo {
     std::vector<std::string> conjuntos;
     // Matriz de adyacencia
     std::vector<std::vector<short int>> matriz_adj;
-    int num_vertices;
-    int num_aristas;
+    int num_vertices, init_num_nodes, num_aristas;
 
     Grafo(){};
     Grafo(std::vector<Arista> _aristas,
@@ -53,27 +52,30 @@ struct Grafo {
           int _num_vertices,
           int _num_aristas)
         : aristas(_aristas), conjuntos(_conjuntos), matriz_adj(_matriz_adj),
-          num_vertices(_num_vertices), num_aristas(_num_aristas){};
+          num_vertices(_num_vertices), init_num_nodes(_num_vertices), num_aristas(_num_aristas){};
 
     void contraer_arista(const Arista arista) {
 
         conjuntos[arista.src] = conjuntos[arista.src] + "-" + conjuntos[arista.dest];
         conjuntos[arista.dest] = "";
-
-        for (int i = 0; i < num_vertices; i++) {
+        for (int i = 0; i < init_num_nodes; i++) {
             matriz_adj[arista.src][i] = matriz_adj[arista.src][i] + matriz_adj[arista.dest][i];
+        }
+
+        for (int i = 0; i < init_num_nodes; i++) {
+            matriz_adj[arista.dest][i] = -1;
         }
 
         matriz_adj[arista.src][arista.src] = 0;
         matriz_adj[arista.src][arista.dest] = 0;
 
-        for (int i = 0; i < num_vertices; i++) {
+        for (int i = 0; i < init_num_nodes; i++) {
             if (conjuntos[i] != "" && i != arista.src) {
                 matriz_adj[i][arista.src] = matriz_adj[i][arista.src] + matriz_adj[i][arista.dest];
                 matriz_adj[i][arista.dest] = 0;
             }
         }
-
+        num_vertices--;
         eliminar_arista(arista);
     }
 
@@ -112,14 +114,18 @@ struct Grafo {
             std::cout << a << std::endl;
     };
 
-    void i() {
-        int posicion;
-        Arista arista(2, 3);
-        for (long unsigned int i = 0; i < aristas.size(); i++) {
+    int get_cut() {
+        int acum = 0, posicion = 0;
 
-            if (aristas[i].dest == arista.src && aristas[i].src == arista.dest)
-                posicion = i;
+        while (conjuntos[posicion] == "") {
+
+            posicion++;
         }
-        aristas.erase(aristas.begin() + posicion);
+
+        for (int i = 0; i < init_num_nodes; i++) {
+
+            acum += matriz_adj[posicion][i];
+        }
+        return acum;
     }
 };

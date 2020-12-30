@@ -180,24 +180,41 @@ void read_args(int argc, char **argv, std::string &path_matriz, std::string &pat
         }
     }
 }
-
+/*
 void Karger(Grafo &grafo, int r) {
 
-    int num_vertices = grafo.num_vertices;
-    int ran;
-    Arista ran_arista;
+    Grafo aux = grafo;
 
-    while (num_vertices > r) {
-
-        ran = random_int(0, grafo.num_aristas - 1);
-        ran_arista = grafo.aristas[ran];
-        //std::cout << ran_arista << std::endl;
-        grafo.contraer_arista(ran_arista);
-        num_vertices--;
-    }
     std::cout << "Resultado:" << std::endl;
     mostrar_matrix(grafo.matriz_adj);
     grafo.ver_conjuntos();
+}
+*/
+void contraer_r(Grafo &grafo, int r) {
+    int ran;
+    Arista ran_arista;
+    while (grafo.num_vertices > r) {
+        ran = random_int(0, grafo.num_aristas - 1);
+        ran_arista = grafo.aristas[ran];
+        grafo.contraer_arista(ran_arista);
+    }
+}
+
+int KargerStein(Grafo &grafo, int r) {
+    Grafo grafo2;
+    int t;
+
+    if (grafo.num_vertices < 6) {
+        contraer_r(grafo, r);
+        return grafo.get_cut();
+
+    } else {
+        grafo2 = grafo;
+        t = 1.0f + (float)grafo.num_vertices / std::sqrt(2.0f);
+        contraer_r(grafo, std::max(r, t));
+        contraer_r(grafo2, std::max(r, t));
+        return std::min(KargerStein(grafo, r), KargerStein(grafo2, r));
+    }
 }
 
 int main(int argc, char **argv) {
@@ -217,7 +234,8 @@ int main(int argc, char **argv) {
         std::cout << s << std::endl;
     }
     timepo_antes = clock();
-    Karger(grafo, r);
+    int cut = KargerStein(grafo, r);
     tiempo_despues = clock();
+    std::cout << "corte: " << cut << std::endl;
     std::cout << "Tiempo: " << (float(timepo_antes - tiempo_despues) / CLOCKS_PER_SEC) << std::endl;
 }

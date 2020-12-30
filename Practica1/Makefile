@@ -15,7 +15,7 @@ SRC=src
 all: min_cut $(FILE)
 
 ##linkar
-min_cut: min_cut.o random.o
+min_cut: min_cut.o random.o 
 	$(CC) $(CPPFLAGS) $(LDFLAGS) random.o min_cut.o -o min_cut 
 
 $(FILE): $(FILE).o random.o
