@@ -37,8 +37,11 @@ inline std::ostream &operator<<(std::ostream &out, const Arista &a) {
 
 struct Grafo {
 
+    // Numero de aristas
     std::vector<Arista> aristas;
+    // Lista de conjuntos de nodos para guardar la traza
     std::vector<std::string> conjuntos;
+    // Matriz de adyacencia
     std::vector<std::vector<short int>> matriz_adj;
     int num_vertices;
     int num_aristas;
