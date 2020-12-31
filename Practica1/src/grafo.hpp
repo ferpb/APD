@@ -128,4 +128,25 @@ struct Grafo {
         }
         return acum;
     }
+
+    Arista get_prob_arista() {
+
+        int acum = 0, count = 0, random;
+        std::vector<int> grados_acumulados(aristas.size());
+        for (const Arista &a : aristas) {
+
+            acum += matriz_adj[a.src][a.dest];
+            grados_acumulados[count] = acum;
+            count++;
+        }
+        random = random_int(0, acum);
+
+        for (unsigned long int i = 0; i < aristas.size(); i++) {
+
+            if (random < grados_acumulados[i])
+                return aristas[i];
+        }
+
+        return Arista();
+    }
 };

@@ -21,11 +21,10 @@
 
 struct Tabla_Hash {
   private:
-    // Usar como tamanyo un numero Mersenne,
-    // dicho numero es un primo una unidad
-    // menor a una  potencia de
-    // 2. 131071 = 2^17 - 1
-    int tamanyo = 131071;
+    // Usar como tamanyo un numero primo cercano
+    // a una  potencia de
+    // 2. 16381 = 2^14 - 3
+    int tamanyo = 16381;
     std::vector<int> T;
     std::vector<std::vector<Producto>> tabla_hash;
     bool success;

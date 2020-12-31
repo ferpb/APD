@@ -180,16 +180,7 @@ void read_args(int argc, char **argv, std::string &path_matriz, std::string &pat
         }
     }
 }
-/*
-void Karger(Grafo &grafo, int r) {
 
-    Grafo aux = grafo;
-
-    std::cout << "Resultado:" << std::endl;
-    mostrar_matrix(grafo.matriz_adj);
-    grafo.ver_conjuntos();
-}
-*/
 void contraer_r(Grafo &grafo, int r) {
     int ran;
     Arista ran_arista;
@@ -200,20 +191,56 @@ void contraer_r(Grafo &grafo, int r) {
     }
 }
 
+void contraer_r_probs(Grafo &grafo, int r) {
+
+    Arista ran_arista;
+    while (grafo.num_vertices > r) {
+
+        ran_arista = grafo.get_prob_arista();
+        grafo.contraer_arista(ran_arista);
+    }
+}
+
+int Karger(Grafo &grafo, int r, int k) {
+    Grafo grafo2;
+    int cut = std::numeric_limits<int>::max();
+
+    for (int i = 0; i < k; i++) {
+        grafo2 = grafo;
+        contraer_r(grafo2, r);
+        cut = std::min(grafo2.get_cut(), cut);
+    }
+    return cut;
+}
+
+int KargerProbsAristas(Grafo &grafo, int r, int k) {
+    Grafo grafo2;
+    int cut = std::numeric_limits<int>::max();
+
+    for (int i = 0; i < k; i++) {
+        grafo2 = grafo;
+        contraer_r_probs(grafo2, r);
+        cut = std::min(grafo2.get_cut(), cut);
+    }
+    return cut;
+}
+
 int KargerStein(Grafo &grafo, int r) {
+
     Grafo grafo2;
     int t;
-
-    if (grafo.num_vertices < 6) {
+    if (grafo.num_vertices <= 6) {
         contraer_r(grafo, r);
         return grafo.get_cut();
 
-    } else {
+    } else if (grafo.num_vertices != r) {
         grafo2 = grafo;
         t = 1.0f + (float)grafo.num_vertices / std::sqrt(2.0f);
         contraer_r(grafo, std::max(r, t));
         contraer_r(grafo2, std::max(r, t));
         return std::min(KargerStein(grafo, r), KargerStein(grafo2, r));
+    } else {
+        return grafo.get_cut();
     }
 }
 
@@ -234,8 +261,18 @@ int main(int argc, char **argv) {
         std::cout << s << std::endl;
     }
     timepo_antes = clock();
-    int cut = KargerStein(grafo, r);
+    int cut = Karger(grafo, r, 1);
     tiempo_despues = clock();
-    std::cout << "corte: " << cut << std::endl;
-    std::cout << "Tiempo: " << (float(timepo_antes - tiempo_despues) / CLOCKS_PER_SEC) << std::endl;
+    std::cout << "Corte: " << cut << std::endl;
+    std::cout << "Tiempo Karger: " << (float(timepo_antes - tiempo_despues) / CLOCKS_PER_SEC) << std::endl;
+    timepo_antes = clock();
+    cut = KargerProbsAristas(grafo, r, 1);
+    tiempo_despues = clock();
+    std::cout << "Corte: " << cut << std::endl;
+    std::cout << "Tiempo KargerProbs: " << (float(timepo_antes - tiempo_despues) / CLOCKS_PER_SEC) << std::endl;
+    timepo_antes = clock();
+    cut = KargerStein(grafo, r);
+    tiempo_despues = clock();
+    std::cout << "Corte: " << cut << std::endl;
+    std::cout << "Tiempo Karger Stein: " << (float(timepo_antes - tiempo_despues) / CLOCKS_PER_SEC) << std::endl;
 }
