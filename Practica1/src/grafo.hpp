@@ -132,8 +132,10 @@ struct Grafo {
     Arista get_prob_arista() {
 
         int acum = 0, count = 0, random;
-        std::vector<int> grados_acumulados(aristas.size());
-        for (const Arista &a : aristas) {
+        std::vector<Arista> aristas_unique = aristas;
+        aristas_unique.erase(std::unique(aristas_unique.begin(), aristas_unique.end()), aristas_unique.end());
+        std::vector<int> grados_acumulados(aristas_unique.size());
+        for (const Arista &a : aristas_unique) {
 
             acum += matriz_adj[a.src][a.dest];
             grados_acumulados[count] = acum;
@@ -144,7 +146,7 @@ struct Grafo {
         for (unsigned long int i = 0; i < aristas.size(); i++) {
 
             if (random < grados_acumulados[i])
-                return aristas[i];
+                return aristas_unique[i];
         }
 
         return Arista();
