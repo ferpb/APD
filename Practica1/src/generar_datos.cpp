@@ -1,9 +1,9 @@
 /*********************************************************************************
- * Generar datos de prueba aleatorio
+ * Generar datos de prueba aleatorios
  *
  * File: random.cpp
  * Author: Fernando Peña (NIA: 756012)
- * Author: Jose Daniel Subias Sarrato (NIA: 759533)
+ * Author: Jose Daniel Subías Sarrato (NIA: 759533)
  * Date: 7/12/2020
  * Coms: Algoritmia para Problemas Difíciles, 2020-2021
  **********************************************************************************/
@@ -42,7 +42,7 @@ bool generar_productos(std::string fichero, int num_prods) {
 }
 
 // Genera una matriz de adyacencia aleatorio para <num_prods> productos
-// Cada pareja de productos tienen probabilidad <prob> de estar conectados
+// Cada pareja de productos tiene probabilidad <prob> de estar conectados
 bool generar_matriz(std::string fichero, int num_prods, float prob) {
     std::ofstream os(fichero, std::ios::out);
     if (!os.is_open()) {
@@ -79,14 +79,14 @@ float get_valor_arg(int argc, char **argv, int i, float default_value) {
     return value;
 }
 
-std::string generar_nombre_fichero(std::string prefijo, int num_prods, float prob, int indice, std::string ext) {
+std::string generar_nombre_fichero(std::string sufijo, int num_prods, float prob, int indice, std::string ext) {
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2) << prob;
     std::string p = stream.str();
 
     std::replace(p.begin(), p.end(), '.', '-');
 
-    return prefijo + "_" + std::to_string(num_prods) + "_" + p + "_" + std::to_string(indice) + ext;
+    return std::to_string(num_prods) + "_" + p + "_" + std::to_string(indice) + "_" + sufijo + ext;
 }
 
 int main(int argc, char **argv) {

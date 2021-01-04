@@ -27,7 +27,7 @@ struct Tabla_Hash {
     int tamanyo = 16381;
     std::vector<int> T;
     std::vector<std::vector<Producto>> tabla_hash;
-    bool success;
+    // bool success;
 
   public:
     Tabla_Hash() {
