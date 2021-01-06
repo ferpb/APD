@@ -42,13 +42,9 @@ Tabla_Hash leer_productos(std::string fichero) {
 };
 
 void mostrar_matrix(const std::vector<std::vector<short int>> &matriz) {
-
     int n = matriz.size();
-
     for (int i = 0; i < n; i++) {
-
         for (int m = 0; m < n; m++) {
-
             std::cout << matriz[i][m];
         }
         std::cout << std::endl;
@@ -90,6 +86,7 @@ void hacer_simetrica(std::vector<std::vector<short int>> &matriz_adj, int n) {
         }
     }
 }
+
 std::vector<Arista> get_aristas(const std::vector<std::vector<short int>> &matriz_adj, int n) {
 
     std::vector<Arista> aristas;
@@ -130,8 +127,8 @@ Grafo crear_grafo(std::string fichero) {
     m = aristas.size();
     //show_matrix(matriz_adj);
     std::cout << "Grafo creado:" << std::endl;
-    std::cout << "* Numero de nodos:" << n << std::endl;
-    std::cout << "* Numero de aristas:" << m << std::endl;
+    std::cout << "  * Numero de nodos: " << n << std::endl;
+    std::cout << "  * Numero de aristas: " << m << std::endl;
 
     Grafo grafo(aristas, conjuntos, matriz_adj, n, m);
 
@@ -151,20 +148,23 @@ std::string get_valor_arg(int argc, char **argv, int i, std::string default_valu
 }
 
 int get_valor_arg(int argc, char **argv, int i, int default_value) {
-
     int value = default_value;
     if (i + 1 >= argc || argv[i + 1][0] == '-') {
-        throw "Falta el valor de la opción r";
+        std::string arg = argv[i];
+        throw "Falta el valor de la opción " + arg;
     }
     if (!(std::string(argv[i + 1]) == "r")) {
-
         value = std::stoi(argv[i + 1]);
-    } else
-        throw "La opcion r debe ser un entero";
+    } else {
+        std::string arg = argv[i];
+        throw "El valor de la opcion " + arg;
+    }
+    //  " debe ser un entero";
     return value;
 }
 
 void read_args(int argc, char **argv, std::string &path_matriz, std::string &path_productos, int &r) {
+    // Leer argumentos -productos -matriz -r
 
     for (int i = 0; i < argc; i++) {
         std::string arg = argv[i];
@@ -246,12 +246,11 @@ int KargerStein(Grafo &grafo, int r) {
 }
 
 int main(int argc, char **argv) {
-
     std::string path_productos, path_matriz;
     Tabla_Hash tabla_hash;
     Grafo grafo;
     int r;
-    unsigned timepo_antes, tiempo_despues;
+    unsigned tiempo_antes, tiempo_despues;
 
     try {
         read_args(argc, argv, path_matriz, path_productos, r);
@@ -261,19 +260,19 @@ int main(int argc, char **argv) {
     } catch (std::string s) {
         std::cout << s << std::endl;
     }
-    timepo_antes = clock();
+    tiempo_antes = clock();
     int cut = Karger(grafo, r, 1);
     tiempo_despues = clock();
     std::cout << "Corte: " << cut << std::endl;
-    std::cout << "Tiempo Karger: " << (float(timepo_antes - tiempo_despues) / CLOCKS_PER_SEC) << std::endl;
-    timepo_antes = clock();
+    std::cout << "Tiempo Karger: " << (float(tiempo_despues - tiempo_antes) / CLOCKS_PER_SEC) << " s" << std::endl;
+    tiempo_antes = clock();
     cut = KargerProbsAristas(grafo, r, 1);
     tiempo_despues = clock();
     std::cout << "Corte: " << cut << std::endl;
-    std::cout << "Tiempo KargerProbs: " << (float(timepo_antes - tiempo_despues) / CLOCKS_PER_SEC) << std::endl;
-    timepo_antes = clock();
+    std::cout << "Tiempo KargerProbs: " << (float(tiempo_despues - tiempo_antes) / CLOCKS_PER_SEC) << " s" << std::endl;
+    tiempo_antes = clock();
     cut = KargerStein(grafo, r);
     tiempo_despues = clock();
     std::cout << "Corte: " << cut << std::endl;
-    std::cout << "Tiempo Karger Stein: " << (float(timepo_antes - tiempo_despues) / CLOCKS_PER_SEC) << std::endl;
+    std::cout << "Tiempo Karger Stein: " << (float(tiempo_despues - tiempo_antes) / CLOCKS_PER_SEC) << " s" << std::endl;
 }

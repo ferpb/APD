@@ -1,6 +1,7 @@
 # Práctica 1
- * Autor: Fernando Peña (NIA: 756012)
- * Autor: Jose Daniel Subias Sarrato (NIA: 759533)
+ * Autor: Fernando Peña Bes (NIA: 756012)
+ * Autor: Jose Daniel Subías Sarrato (NIA: 759533)
+
 ## Generación de datos de prueba
 Los datos de prueba se han generado de manera aleatoria en C++. Como
 generador pseudo-aleatorio, se ha utilizando el algoritmo Mersenne Twister
@@ -22,7 +23,7 @@ Por cada instancia del problema hay dos ficheros, uno contiene los productos
 y otro, la matriz de adyacencia. Sus nombres tienen el siguiente formato:
 
     productos_<num_prods>_<prob>_<instancia>.txt
-    
+
     matriz_<num_prods>_<prob>_<instancia>.txt
 
 El valor `<num_prods>` indica el número de productos que contiene la
@@ -33,7 +34,7 @@ instancia generada con los parámetros anteriores.
 ### Contenidos de los ficheros
 El fichero de productos contiene `<num_prods>` líneas con el siguiente formato:
 
-    <ID_producto> <cantidad> <precio> 
+    <ID_producto> <cantidad> <precio>
     ...
 
 El valor `<ID_producto>` contiene una cadena aleatoria de entre 1 y 20

@@ -1,9 +1,9 @@
 /*********************************************************************************
- * Generar datos de prueba aleatorio
+ * Generar datos de prueba aleatorios
  *
  * File: random.cpp
  * Author: Fernando Peña (NIA: 756012)
- * Author: Jose Daniel Subias Sarrato (NIA: 759533)
+ * Author: Jose Daniel Subías Sarrato (NIA: 759533)
  * Date: 7/12/2020
  * Coms: Algoritmia para Problemas Difíciles, 2020-2021
  **********************************************************************************/
@@ -42,7 +42,7 @@ bool generar_productos(std::string fichero, int num_prods) {
 }
 
 // Genera una matriz de adyacencia aleatorio para <num_prods> productos
-// Cada pareja de productos tienen probabilidad <prob> de estar conectados
+// Cada pareja de productos tiene probabilidad <prob> de estar conectados
 bool generar_matriz(std::string fichero, int num_prods, float prob) {
     std::ofstream os(fichero, std::ios::out);
     if (!os.is_open()) {

@@ -1,9 +1,9 @@
 /*********************************************************************************
- * Random number generation functions 
+ * Funciones para generar valores aleatorios
  *
- * File: random.cpp
+ * File: random.hpp
  * Author: Fernando Peña (NIA: 756012)
- * Author: Jose Daniel Subias Sarrato (NIA: 759533)
+ * Author: Jose Daniel Subías Sarrato (NIA: 759533)
  * Date: 7/12/2020
  * Coms: Algoritmia para Problemas Difíciles, 2020-2021
  **********************************************************************************/

@@ -25,9 +25,13 @@ struct Arista {
 
     Arista(short int _src, short int _dest) : src(_src), dest(_dest) {}
 
-    bool operator==(const Arista &a) {
-        return this->dest == a.dest && this->src == a.src;
-    };
+    // bool operator==(const Arista &a) {
+    //     return this->dest == a.dest && this->src == a.src;
+    // };
+};
+
+bool operator==(const Arista &a, const Arista &b) {
+    return a.dest == b.dest && a.src == b.src;
 };
 
 inline std::ostream &operator<<(std::ostream &out, const Arista &a) {
@@ -115,19 +119,7 @@ struct Grafo {
     };
 
     int get_cut() {
-        int acum = 0, posicion = 0;
-
-        while (conjuntos[posicion] == "") {
-
-            posicion++;
-        }
-
-        for (int i = 0; i < init_num_nodes; i++) {
-
-            acum += matriz_adj[posicion][i];
-        }
-        ver_aristas();
-        return acum;
+        return aristas.size();
     }
 
     Arista get_prob_arista() {
