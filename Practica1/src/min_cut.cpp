@@ -264,8 +264,6 @@ int main(int argc, char **argv) {
     tiempo_despues = clock();
     std::cout << "Corte: " << cut << std::endl;
     std::cout << "Tiempo Karger: " << (float(tiempo_despues - tiempo_antes) / CLOCKS_PER_SEC) << " s" << std::endl;
-
-    /*
     tiempo_antes = clock();
     cut = KargerProbsAristas(grafo, r, 1);
     tiempo_despues = clock();
@@ -276,5 +274,4 @@ int main(int argc, char **argv) {
     tiempo_despues = clock();
     std::cout << "Corte: " << cut << std::endl;
     std::cout << "Tiempo Karger Stein: " << (float(tiempo_despues - tiempo_antes) / CLOCKS_PER_SEC) << " s" << std::endl;
-    */
 }
