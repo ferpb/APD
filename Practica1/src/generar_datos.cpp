@@ -79,14 +79,14 @@ float get_valor_arg(int argc, char **argv, int i, float default_value) {
     return value;
 }
 
-std::string generar_nombre_fichero(std::string sufijo, int num_prods, float prob, int indice, std::string ext) {
+std::string generar_nombre_fichero(std::string prefijo, int num_prods, float prob, int indice, std::string ext) {
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2) << prob;
     std::string p = stream.str();
 
     std::replace(p.begin(), p.end(), '.', '-');
 
-    return std::to_string(num_prods) + "_" + p + "_" + std::to_string(indice) + "_" + sufijo + ext;
+    return prefijo + "_" + std::to_string(num_prods) + "_" + p + "_" + std::to_string(indice) + ext;
 }
 
 int main(int argc, char **argv) {
