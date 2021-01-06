@@ -126,6 +126,7 @@ struct Grafo {
 
             acum += matriz_adj[posicion][i];
         }
+        ver_aristas();
         return acum;
     }
 

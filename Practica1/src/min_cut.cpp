@@ -209,6 +209,7 @@ int Karger(Grafo &grafo, int r, int k) {
         grafo2 = grafo;
         contraer_r(grafo2, r);
         cut = std::min(grafo2.get_cut(), cut);
+        mostrar_matrix(grafo2.matriz_adj);
     }
     return cut;
 }
