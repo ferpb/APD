@@ -133,7 +133,7 @@ def wVC_entero(grafo):
         # print('Solution:')
         # print('Objective value = ', solver.Objective().Value())
         for i in range(0, len(grafo[1])):
-            v = variables[i]
+            # v = variables[i]
             # print(str(v), "=", v.solution_value())
             if variables[i].solution_value() >= 1:
                 solucion.append(i)
@@ -240,14 +240,22 @@ def PricingMethod_bueno(grafo):
 
 # grafo[0] representa el conjunto de aristas
 # grafo[1] representa el conjunto de vertices
-grafo = leer_entrada(sys.argv[1])
-print("Grafo:", grafo)
 
-print("LP entero")
-wVC_entero(grafo)
+if __name__ == "__main__":
 
-print("LP relajado")
-MinWeightVC(grafo)
+    if len(sys.argv) != 2:
+        print("Uso: vertex_cover fichero")
+        exit(1)
 
-print("Pricing method")
-PricingMethod_bueno(grafo)
+    grafo = leer_entrada(sys.argv[1])
+
+    print("Grafo:", grafo)
+
+    print("LP entero")
+    wVC_entero(grafo)
+
+    print("LP relajado")
+    MinWeightVC(grafo)
+
+    print("Pricing method")
+    PricingMethod_bueno(grafo)
