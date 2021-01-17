@@ -3,6 +3,9 @@
 import argparse
 import random
 import itertools
+import networkx as nx
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 # Formato del fichero;
@@ -37,6 +40,11 @@ def generar(fichero, num_vertices, densidad, pesos):
         fichero.write("%d %d\n" % (arista[0], arista[1]))
     for peso in pesos:
         fichero.write("%.2f\n" % peso)
+
+    # G = nx.Graph()
+    # G.add_edges_from(aristas)
+    # nx.draw(G, with_labels=True)
+    # plt.show()
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 from ortools.linear_solver import pywraplp
+import time
 
 
 def leer_entrada(ficheroDeEntrada):
@@ -60,14 +61,18 @@ def MinWeightVC(grafo):
 
     if status == solver.OPTIMAL:
 
-        for v in range(0, len(grafo[1])):
+        for i in range(0, len(grafo[1])):
 
-            if(variables[v].solution_value() >= 0.5):
-                sum = sum + grafo[1][v]
-                solucion.append(v)
+            # print(variables[i].solution_value())
+            if(variables[i].solution_value() >= 0.5):
+                sum = sum + grafo[1][i]
+                solucion.append(i)
 
-        print(len(grafo[1]), ' ', len(grafo[0]), ' ', sum)
-        print(solucion)
+        # print(len(grafo[1]), ' ', len(grafo[0]), ' ', sum)
+        # print(solucion)
+        # print(sum)
+        # print(solver.Objective().Value())
+        return sum
 
     else:
 
@@ -126,6 +131,8 @@ def wVC_entero(grafo):
     status = solver.Solve()
     solucion = []
 
+    sum = 0
+
     if status == solver.OPTIMAL:
 
         solucion = []
@@ -136,11 +143,15 @@ def wVC_entero(grafo):
             # v = variables[i]
             # print(str(v), "=", v.solution_value())
             if variables[i].solution_value() >= 1:
+                # sum = sum + grafo[1][i]
                 solucion.append(i)
 
-        print(len(grafo[1]), ' ', len(grafo[0]),
-              ' ', solver.Objective().Value())
-        print(solucion)
+        # print(len(grafo[1]), ' ', len(grafo[0]),
+        #       ' ', solver.Objective().Value())
+        # print(solucion)
+        print(solver.Objective().Value())
+        # print(sum)
+        # return sum
 
     else:
 
@@ -181,6 +192,7 @@ def incrementar_peso(pesos_aristas, num_arista, arista, grafo):
     pesos_aristas[num_arista] = min(resto_v1, resto_v2)
 
 
+"""
 def PricingMethod(grafo):
 
     pesos_aristas = []
@@ -202,6 +214,7 @@ def PricingMethod(grafo):
 
     print(len(grafo[1]), ' ', len(grafo[0]), ' ', sum)
     print(solucion)
+"""
 
 
 def get_arista(grafo, pesos_aristas):
@@ -234,13 +247,14 @@ def PricingMethod_bueno(grafo):
             sum = sum + grafo[1][v]
             solucion.append(v)
 
-    print(len(grafo[1]), ' ', len(grafo[0]), ' ', sum)
-    print(solucion)
+    # print(len(grafo[1]), ' ', len(grafo[0]), ' ', sum)
+    # print(solucion)
+    # print(sum)
+    return sum
 
 
 # grafo[0] representa el conjunto de aristas
 # grafo[1] representa el conjunto de vertices
-
 if __name__ == "__main__":
 
     if len(sys.argv) != 2:
@@ -249,13 +263,25 @@ if __name__ == "__main__":
 
     grafo = leer_entrada(sys.argv[1])
 
-    print("Grafo:", grafo)
+   # print("Grafo:", grafo)
 
-    print("LP entero")
-    wVC_entero(grafo)
+    # print("LP entero")
+    start = time.time()
+    res = wVC_entero(grafo)
+    end = time.time()
+    # print("tiempo:", end - start)
+    print(f"{res:.3f}, {end-start:.5f}", end=", ")
 
-    print("LP relajado")
-    MinWeightVC(grafo)
+    # print("LP relajado")
+    start = time.time()
+    res = MinWeightVC(grafo)
+    end = time.time()
+    # print("tiempo:", end - start)
+    print(f"{res:.3f}, {end-start:.5f}", end=", ")
 
-    print("Pricing method")
-    PricingMethod_bueno(grafo)
+    # print("Pricing method")
+    start = time.time()
+    res = PricingMethod_bueno(grafo)
+    end = time.time()
+    # print("tiempo:", end-start)
+    print(f"{res:.3f}, {end-start:.5f}")
