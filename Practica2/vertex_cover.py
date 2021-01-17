@@ -149,7 +149,8 @@ def wVC_entero(grafo):
         # print(len(grafo[1]), ' ', len(grafo[0]),
         #       ' ', solver.Objective().Value())
         # print(solucion)
-        print(solver.Objective().Value())
+        # print(solver.Objective().Value())
+        return solver.Objective().Value()
         # print(sum)
         # return sum
 
@@ -192,8 +193,7 @@ def incrementar_peso(pesos_aristas, num_arista, arista, grafo):
     pesos_aristas[num_arista] = min(resto_v1, resto_v2)
 
 
-"""
-def PricingMethod(grafo):
+def PricingMethod2(grafo):
 
     pesos_aristas = []
     solucion = []
@@ -212,9 +212,9 @@ def PricingMethod(grafo):
             sum = sum + grafo[1][v]
             solucion.append(v)
 
-    print(len(grafo[1]), ' ', len(grafo[0]), ' ', sum)
-    print(solucion)
-"""
+    # print(len(grafo[1]), ' ', len(grafo[0]), ' ', sum)
+    # print(solucion)
+    return sum
 
 
 def get_arista(grafo, pesos_aristas):
@@ -235,15 +235,18 @@ def PricingMethod_bueno(grafo):
     for _ in range(0, len(grafo[0])):
         pesos_aristas.append(0.0)
 
-    arista,  e = get_arista(grafo, pesos_aristas)
+    arista, e = get_arista(grafo, pesos_aristas)
 
     while arista != []:
 
         incrementar_peso(pesos_aristas, e, arista, grafo)
-        arista,  e = get_arista(grafo, pesos_aristas)
+        arista, e = get_arista(grafo, pesos_aristas)
+
+
+
 
     for v in range(0, len(grafo[1])):
-        if(is_tight(grafo, v, pesos_aristas)):
+        if is_tight(grafo, v, pesos_aristas):
             sum = sum + grafo[1][v]
             solucion.append(v)
 
@@ -253,35 +256,189 @@ def PricingMethod_bueno(grafo):
     return sum
 
 
-# grafo[0] representa el conjunto de aristas
-# grafo[1] representa el conjunto de vertices
+def pricingMethod_mas_rapido(grafo):
+
+    # Guardar tuplas (precio, arista)
+    posibles_aristas = grafo[0].copy()
+
+    vertices_justos = []
+    precios_acumulados_vertices = [0] * len(grafo[1])
+
+    # print()
+    
+    repe = 0
+    while posibles_aristas != []:
+        # print("\nVuelta")
+
+        # Elegir la primera de la lista
+        arista = posibles_aristas[0]
+
+        # print("print arista elegida", arista)
+        # print(grafo[1][arista[0]])
+        # print(grafo[1][arista[1]])
+
+        # Calcular cantidad a incrementar en los dos vértices de la arista
+        incrementar = min(grafo[1][arista[0]] - precios_acumulados_vertices[arista[0]],
+                          grafo[1][arista[1]] - precios_acumulados_vertices[arista[1]])
+
+        # print("incrementar", incrementar)
+
+
+        precios_acumulados_vertices[arista[0]] += incrementar
+        precios_acumulados_vertices[arista[1]] += incrementar
+
+        # Si alguno de los dos vértices es justo, añadirlo a la lista
+        # y eliminar todas las aristas con ese vértice
+
+        if precios_acumulados_vertices[arista[0]] >= grafo[1][arista[0]]:
+            vertices_justos.append(arista[0])
+            posibles_aristas[:] = [a for a in posibles_aristas if a[0] != arista[0] and a[1] != arista[0]]
+            # Eliminar aristas que contienen ese vértice
+                # print("Para u:",e)
+
+            # for e in posibles_aristas:
+                # if e[0] == arista[0] or e[1] == arista[0]:
+                #     # eliminar de la lista posibles aristas
+                #     posibles_aristas.remove(e)
+
+
+        if precios_acumulados_vertices[arista[1]] >= grafo[1][arista[1]]:
+            vertices_justos.append(arista[1])
+            posibles_aristas[:] = [a for a in posibles_aristas if a[0] != arista[1] and a[1] != arista[1]]
+
+        # print(vertices_justos)
+        # print(precios_acumulados_vertices)
+        # print("posibles aristas", posibles_aristas)
+
+        # sys.exit(1)
+
+        # if repe == 2:
+            # sys.exit(1)
+        
+        repe += 1
+
+        
+    sum = 0
+    for v in vertices_justos:
+        sum += grafo[1][v]
+    
+    return sum
+
+def pricingMethod_mucho_mas_rapido(grafo):
+
+    # Guardar tuplas (precio, arista)
+    vertices_justos = []
+    precios_acumulados_vertices = [0] * len(grafo[1])
+
+    for arista in grafo[0]:
+
+        i = arista[0]
+        j = arista[1]
+
+        if precios_acumulados_vertices[i] == grafo[1][i] or precios_acumulados_vertices[j] == grafo[1][j]:
+            continue
+
+        # Calcular cantidad a incrementar en los dos vértices de la arista
+        incrementar = min(grafo[1][i] - precios_acumulados_vertices[i],
+                          grafo[1][j] - precios_acumulados_vertices[j])
+
+
+        precios_acumulados_vertices[arista[0]] += incrementar
+        precios_acumulados_vertices[arista[1]] += incrementar
+        
+    sum = 0
+    for i in range(len(grafo[1])):
+        if precios_acumulados_vertices[i] == grafo[1][i]:
+            sum += grafo[1][i]
+            vertices_justos.append(i)
+
+    # print(vertices_justos)
+    
+    return sum
+    
+def pricingMethod(grafo):
+
+    # Inicializamos los precios restantes con los pesos del grafo
+    precios_restantes = grafo[1].copy()
+
+    # Inicializar resultados
+    sum = 0
+    cubrimiento = []
+
+    for arista in grafo[0]:
+
+        i = arista[0]
+        j = arista[1]
+
+        if precios_restantes[i] == 0 or precios_restantes[j] == 0:
+            # No se puede incrementar el peso de la arista
+            continue
+
+        if (precios_restantes[i] < precios_restantes[j]):
+            # El vértice i se vuelve tight
+            restar = precios_restantes[i]
+            precios_restantes[i] = 0
+            precios_restantes[j] -= restar
+            sum += grafo[1][i]
+            cubrimiento.append(i)
+        else:
+            # El vértice j se vuelve tight
+            restar = precios_restantes[j]
+            precios_restantes[i] -= restar
+            precios_restantes[j] = 0
+            sum += grafo[1][j]
+            cubrimiento.append(j)
+    
+    # print(cubrimiento)
+    return sum
+
+
 if __name__ == "__main__":
 
     if len(sys.argv) != 2:
         print("Uso: vertex_cover fichero")
         exit(1)
 
-    grafo = leer_entrada(sys.argv[1])
+    grafo=leer_entrada(sys.argv[1])
 
-   # print("Grafo:", grafo)
+    # print("Grafo:", grafo)
 
-    # print("LP entero")
-    start = time.time()
-    res = wVC_entero(grafo)
-    end = time.time()
-    # print("tiempo:", end - start)
-    print(f"{res:.3f}, {end-start:.5f}", end=", ")
+    # # print("LP entero")
+    # start = time.time()
+    # res = wVC_entero(grafo)
+    # end = time.time()
+    # # print("tiempo:", end - start)
+    # print(f"{res:.3f}, {end-start:.5f}", end=", ")
 
     # print("LP relajado")
-    start = time.time()
-    res = MinWeightVC(grafo)
-    end = time.time()
+    start=time.time()
+    res=MinWeightVC(grafo)
+    end=time.time()
     # print("tiempo:", end - start)
-    print(f"{res:.3f}, {end-start:.5f}", end=", ")
+    print(f"{res:.3f}, {end-start:.5f}", end=", ", flush=True)
+
+    # # print("Pricing method")
+    # start=time.time()
+    # # res = PricingMethod_bueno(grafo)
+    # res=pricingMethod_mas_rapido(grafo)
+    # end=time.time()
+    # # print("tiempo:", end-start)
+    # print(f"{res:.3f}, {end-start:.5f}", end=", ", flush=True)
+
+    # # print("Pricing method")
+    # start=time.time()
+    # # res = PricingMethod_bueno(grafo)
+    # res=pricingMethod_mucho_mas_rapido(grafo)
+    # end=time.time()
+    # # print("tiempo:", end-start)
+    # print(f"{res:.3f}, {end-start:.5f}", end=", ", flush=True)
+
 
     # print("Pricing method")
-    start = time.time()
-    res = PricingMethod_bueno(grafo)
-    end = time.time()
+    start=time.time()
+    # res = PricingMethod_bueno(grafo)
+    res=pricingMethod(grafo)
+    end=time.time()
     # print("tiempo:", end-start)
     print(f"{res:.3f}, {end-start:.5f}")
+
