@@ -352,6 +352,8 @@ def pricingMethod_mucho_mas_rapido(grafo):
             sum += grafo[1][i]
             vertices_justos.append(i)
 
+    # vertices_justos.sort()
+    # print()
     # print(vertices_justos)
     
     return sum
@@ -371,10 +373,17 @@ def pricingMethod(grafo):
         j = arista[1]
 
         if precios_restantes[i] == 0 or precios_restantes[j] == 0:
-            # No se puede incrementar el peso de la arista
+            # No se puede incrementar el precio de la arista
             continue
 
-        if (precios_restantes[i] < precios_restantes[j]):
+        if (precios_restantes[i] == precios_restantes[j]):
+            # Los dos vértices se vuelven tight
+            precios_restantes[i] = 0
+            precios_restantes[j] = 0
+            sum += grafo[1][i] + grafo[1][j]
+            cubrimiento.append(i)
+            cubrimiento.append(j)
+        elif (precios_restantes[i] < precios_restantes[j]):
             # El vértice i se vuelve tight
             restar = precios_restantes[i]
             precios_restantes[i] = 0
@@ -389,6 +398,8 @@ def pricingMethod(grafo):
             sum += grafo[1][j]
             cubrimiento.append(j)
     
+    # cubrimiento.sort()
+    # print()
     # print(cubrimiento)
     return sum
 
@@ -420,6 +431,14 @@ if __name__ == "__main__":
     # # print("Pricing method")
     # start=time.time()
     # # res = PricingMethod_bueno(grafo)
+    # res=PricingMethod_bueno(grafo)
+    # end=time.time()
+    # # print("tiempo:", end-start)
+    # print(f"{res:.3f}, {end-start:.5f}", end=", ", flush=True)
+
+    # # print("Pricing method")
+    # start=time.time()
+    # # res = PricingMethod_bueno(grafo)
     # res=pricingMethod_mas_rapido(grafo)
     # end=time.time()
     # # print("tiempo:", end-start)
@@ -432,7 +451,6 @@ if __name__ == "__main__":
     # end=time.time()
     # # print("tiempo:", end-start)
     # print(f"{res:.3f}, {end-start:.5f}", end=", ", flush=True)
-
 
     # print("Pricing method")
     start=time.time()
