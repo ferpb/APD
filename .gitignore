@@ -37,6 +37,5 @@
 # VSCode
 .vscode
 
-Practica1/comp
-Practica1/datos
-Practica1/min_cut
+r-mincut/datos
+r-mincut/min_cut

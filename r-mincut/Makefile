@@ -9,7 +9,6 @@
 
 CC=g++
 CPPFLAGS=-std=c++11 -Wall -O3
-FILE=generar_datos
 SRC=src
 
 all: min_cut $(FILE)
@@ -18,12 +17,12 @@ all: min_cut $(FILE)
 min_cut: min_cut.o random.o 
 	$(CC) $(CPPFLAGS) $(LDFLAGS) random.o min_cut.o -o min_cut 
 
-$(FILE): $(FILE).o random.o
-	$(CC) $(CPPFLAGS) $(LDFLAGS) random.o $(SRC)/$(FILE).cpp -o $(FILE)
+generar_datos: generar_datos.o random.o
+	$(CC) $(CPPFLAGS) $(LDFLAGS) random.o $(SRC)/generar_datos.cpp -o generar_datos
 
 ##compilar
-$(FILE).o: $(SRC)/$(FILE).cpp $(SRC)/random.hpp
-	$(CC) $(CPPFLAGS) $(SRC)/$(FILE).cpp -c
+generar_datos.o: $(SRC)/generar_datos.cpp $(SRC)/random.hpp
+	$(CC) $(CPPFLAGS) $(SRC)/generar_datos.cpp -c
 
 random.o: $(SRC)/random.cpp $(SRC)/random.hpp
 	$(CC) $(CPPFLAGS) $(SRC)/random.cpp -c
